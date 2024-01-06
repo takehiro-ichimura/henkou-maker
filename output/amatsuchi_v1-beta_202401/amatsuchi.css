@@ -588,6 +588,10 @@ a {
 .amatsuchi .gothic {
   font-family: "Hiragino Kaku Gothic", sans-serif;
 }
+.amatsuchi .shatai {
+  display: inline-block;
+  transform: skewY(-20deg);
+}
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   .amatsuchi .rinku {
