@@ -5,6 +5,19 @@ class ParseMode(Enum):
     USE_PARAGRAPH = 1
     USE_BR = 2
 
+ZEN_HAN_MAP = {
+    '０': '0',
+    '１': '1',
+    '２': '2',
+    '３': '3',
+    '４': '4',
+    '５': '5',
+    '６': '6',
+    '７': '7',
+    '８': '8',
+    '９': '9',
+}
+
 # TODO: 複雑になってきたら、jinja2などの利用を検討する
 class TextModel:
     template = ''
@@ -43,6 +56,12 @@ class TextModel:
     def __update(self, tagName, content):
         self.output = self.output.replace(r"{{"+ tagName + r"}}", content)
     
+    def __parseJisage(self):
+        patternStart = '［＃ここから(.+)字下げ］'
+        patternEnd = '［＃ここで字下げ終わり］'
+        self.output = re.sub(patternStart,  r'<div style="margin-top:\1rem">', self.output).translate(str.maketrans(ZEN_HAN_MAP))
+        self.output = re.sub(patternEnd,  r'</div>', self.output)
+    
     def __parseRuby(self):
         pattern = '｜(.+)《(.+)》'
         self.output = re.sub(pattern,  r'<ruby>\1<rt>\2</rt></ruby>', self.output)
@@ -75,6 +94,7 @@ class TextModel:
         else:
             self.__update(contentTagName, self.__createContentUseBr())
         self.__parseRuby()
+        self.__parseJisage()
     
     def __createIssue(self):
         issueTagName = 'issue'
