@@ -11,36 +11,40 @@ class TextModel:
     issue = ''
     title = ''
     author = ''
-    textlines = []
+    content = []
 
     output = ''
 
-    def __init__(self, issue, title, author, textlines, template):
+    def __init__(self, issue, title, author, content, template):
         self.issue = issue
         self.title = title
         self.author = author
-        self.textlines = textlines
+        self.content = content
 
         self.template = template
         self.output = template
     
-    # ファイルをimportし、クラスを初期化する
+    # ファイルをimportし、クラスを初期化する(in.txt形式)
     @classmethod
     def create(cls, fileName, templateFilename):
-        # textlinesの初期化
-        contentFile = open(fileName, 'r')
-        textlines = contentFile.readlines()
-        # tmplateの初期化
+        inputFile = open(fileName, 'r')
+        inputLines = inputFile.readlines()
+
+        issue = inputLines[0]
+        title = inputLines[1]
+        author = inputLines[2]
+        content = inputLines[3:]
+
         templateFile = open(templateFilename, 'r')
         template = templateFile.read()
-        return cls("", "", "", textlines, template)
+        return cls(issue, title, author, content, template)
         
     def __update(self, tagName, content):
         self.output = self.output.replace(r"{{"+ tagName + r"}}", content)
 
     def __createContentUseParagpaph(self):
         out = ""
-        for x in self.textlines:
+        for x in self.content:
             if x == "\n":
                 out += "<br>"
             else:
@@ -50,7 +54,7 @@ class TextModel:
     
     def __createContentUseBr(self):
         out = "<p>"
-        for x in self.textlines:
+        for x in self.content:
             if x == "\n":
                 out += "<br>"
             else:
