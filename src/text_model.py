@@ -1,4 +1,5 @@
 from enum import Enum
+import re
 
 class ParseMode(Enum):
     USE_PARAGRAPH = 1
@@ -41,6 +42,10 @@ class TextModel:
         
     def __update(self, tagName, content):
         self.output = self.output.replace(r"{{"+ tagName + r"}}", content)
+    
+    def __parseRuby(self):
+        pattern = '｜(.+)《(.+)》'
+        self.output = re.sub(pattern,  r'<ruby>\1<rt>\2</rt></ruby>', self.output)
 
     def __createContentUseParagpaph(self):
         out = ""
@@ -69,6 +74,7 @@ class TextModel:
             self.__update(contentTagName, self.__createContentUseParagpaph())
         else:
             self.__update(contentTagName, self.__createContentUseBr())
+        self.__parseRuby()
     
     def __createIssue(self):
         issueTagName = 'issue'
