@@ -4,52 +4,85 @@ class ParseMode(Enum):
     USE_PARAGRAPH = 1
     USE_BR = 2
 
+# TODO: 複雑になってきたら、jinja2などの利用を検討する
 class TextModel:
+    template = ''
+
+    issue = ''
+    title = ''
+    author = ''
     textlines = []
 
-    def __init__(self, textlines):
+    output = ''
+
+    def __init__(self, issue, title, author, textlines, template):
+        self.issue = issue
+        self.title = title
+        self.author = author
         self.textlines = textlines
+
+        self.template = template
+        self.output = template
     
     # ファイルをimportし、クラスを初期化する
     @classmethod
-    def create(cls, fileName):
-        file = open(fileName, 'r')
-        textlines = file.readlines()
-        return cls(textlines)
+    def create(cls, fileName, templateFilename):
+        # textlinesの初期化
+        contentFile = open(fileName, 'r')
+        textlines = contentFile.readlines()
+        # tmplateの初期化
+        templateFile = open(templateFilename, 'r')
+        template = templateFile.read()
+        return cls("", "", "", textlines, template)
+        
+    def __update(self, tagName, content):
+        self.output = self.output.replace(r"{{"+ tagName + r"}}", content)
 
-    def __parseUseParagpaph(self):
+    def __createContentUseParagpaph(self):
         out = ""
-
         for x in self.textlines:
             if x == "\n":
                 out += "<br>"
             else:
                 out += ("<p>"+x.replace("\n","")+"</p>")
             out += "\n"
-
         return out
     
-    def __parseUseBr(self):
+    def __createContentUseBr(self):
         out = "<p>"
-
         for x in self.textlines:
             if x == "\n":
                 out += "<br>"
             else:
                 out += (x.replace("\n","<br>"))
             out += "\n"
-        
         out += "</p>"
         return out
     
-    def __parse(self, parseMode):
+    def __createContent(self, parseMode):
+        contentTagName = 'content'
         if (parseMode == ParseMode.USE_PARAGRAPH):
-            return self.__parseUseParagpaph()
+            self.__update(contentTagName, self.__createContentUseParagpaph())
         else:
-            return self.__parseUseBr()
-
-
+            self.__update(contentTagName, self.__createContentUseBr())
+    
+    def __createIssue(self):
+        issueTagName = 'issue'
+        self.__update(issueTagName, self.issue)
+    
+    def __createTitle(self):
+        titleTagName = 'title'
+        self.__update(titleTagName, self.title)
+    
+    def __createAuthor(self):
+        authorTagName = 'author'
+        self.__update(authorTagName, self.author)
+    
+    # テンプレートを更新し、ファイルを出力する
     def export(self, parseMode = ParseMode.USE_BR):
-        output = self.__parse(parseMode)
-        print(output)
+        self.__createIssue()
+        self.__createTitle()
+        self.__createAuthor()
+        self.__createContent(parseMode)
+        print(self.output)
     
