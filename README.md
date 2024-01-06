@@ -2,9 +2,9 @@
 
 偏向編集作業効率化のためのツール
 
-## バイナリ作成
+## 配布用 zip 作成
 
-pyinstaller ./src/main.py --onefile
+./create_distribution.s
 
 ## OGP 用のメタタグ例
 
