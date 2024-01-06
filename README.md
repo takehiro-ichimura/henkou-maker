@@ -2,6 +2,10 @@
 
 偏向編集作業効率化のためのツール
 
+## バイナリ作成
+
+pyinstaller ./src/main.py --onefile
+
 ## OGP 用のメタタグ例
 
 <meta

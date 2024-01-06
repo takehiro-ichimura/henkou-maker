@@ -114,10 +114,10 @@ class TextModel:
         f.close()
     
     # テンプレートを更新し、ファイルを出力する
-    def export(self, parseMode = ParseMode.USE_BR):
+    def export(self, parseMode = ParseMode.USE_BR, output_path = './'):
         self.__createIssue()
         self.__createTitle()
         self.__createAuthor()
         self.__createContent(parseMode)
-        self.__writeToFile('./output/' + self.title + '.html')
+        self.__writeToFile(output_path + self.title + '.html')
     
