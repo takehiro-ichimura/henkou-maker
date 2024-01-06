@@ -63,7 +63,7 @@ class TextModel:
         self.output = re.sub(patternEnd,  r'</div>', self.output)
     
     def __parseRuby(self):
-        pattern = '｜(.+)《(.+)》'
+        pattern = '｜(.+?)《(.+?)》'
         self.output = re.sub(pattern,  r'<ruby>\1<rt>\2</rt></ruby>', self.output)
 
     def __createContentUseParagpaph(self):
