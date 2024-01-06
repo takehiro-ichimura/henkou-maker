@@ -30,9 +30,9 @@ class TextModel:
         inputFile = open(fileName, 'r')
         inputLines = inputFile.readlines()
 
-        issue = inputLines[0]
-        title = inputLines[1]
-        author = inputLines[2]
+        issue = inputLines[0].replace('\n','')
+        title = inputLines[1].replace('\n','')
+        author = inputLines[2].replace('\n','')
         content = inputLines[3:]
 
         templateFile = open(templateFilename, 'r')
@@ -82,11 +82,16 @@ class TextModel:
         authorTagName = 'author'
         self.__update(authorTagName, self.author)
     
+    def __writeToFile(self, filename):
+        f = open(filename, 'w')
+        f.write(self.output)
+        f.close()
+    
     # テンプレートを更新し、ファイルを出力する
     def export(self, parseMode = ParseMode.USE_BR):
         self.__createIssue()
         self.__createTitle()
         self.__createAuthor()
         self.__createContent(parseMode)
-        print(self.output)
+        self.__writeToFile('./output/' + self.title + '.html')
     
