@@ -4,7 +4,7 @@
 
 ## 配布用 zip 作成
 
-./create_distribution.s
+./create_distribution.sh
 
 ## OGP 用のメタタグ例
 
